@@ -8,6 +8,10 @@ This demo demonstrates how to use the PredictionIO Swift SDK to integrate an iOS
 - Xcode 6.3 and iOS 8.2
 - [CocoaPods 0.36](https://guides.cocoapods.org/using/getting-started.html) (Dependency manager for Swift projects)
 
+### Demo
+
+[![thumbnail](http://img.youtube.com/vi/4kde72NhQ0o/0.jpg)](http://youtu.be/4kde72NhQ0o)
+
 ## Quick Setup
 
 ### Set up the PredictionIO Engine
