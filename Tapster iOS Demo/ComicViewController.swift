@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import ObjectMapper
+import PredictionIOSDK
 
 class ComicViewController : UIViewController {
     
@@ -22,6 +23,7 @@ class ComicViewController : UIViewController {
     // so we use the smaller list to reduce the loading time.
     lazy var comicsData: CSVData = CSVData(fileName: "seed_episode_list")
     
+    let engineClient = EngineClient()
     var directionComicDeleted: Direction = .Right
     var likedComicIDs = [String]()
     var displayedComicIDs = [String]()
@@ -104,9 +106,31 @@ class ComicViewController : UIViewController {
             self.isAnimating = false
         })
         
-        // Add a random new comic
-        let comic = randomizeComics(numberOfComics: 1)[0]
-        addAndAnimateNewComic(comic)
+        // We can't query PredictionIO with no likes,
+        // so we just add a new random comic
+        if likedComicIDs.isEmpty {
+            let comic = randomizeComics(numberOfComics: 1)[0]
+            addAndAnimateNewComic(comic)
+            
+            return
+        }
+        
+        println("querying ...")
+        println("liked: \(likedComicIDs)")
+        println("blackList: \(displayedComicIDs)")
+        let query: [String: NSObject] = [
+            "num": 1,
+            "items": likedComicIDs,
+            "blackList": displayedComicIDs
+        ]
+        
+        engineClient.sendQuery(query, completionHandler: { (request, response, data, error) in
+            if let result = Mapper<Result>().map(data) {
+                if result.comics.count > 0 {
+                    self.addAndAnimateNewComic(result.comics[0])
+                }
+            }
+        })
     }
     
     private func addAndAnimateNewComic(comic: Comic) {
