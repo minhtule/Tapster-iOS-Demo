@@ -205,7 +205,7 @@ $ pio eventserver
 The import process has been included in  `DataViewController.swift`. However, you need to add the app ID of the PredictionIO app that you created earlier so that the `eventClient` knows where to send the data to.
 
 ```swift
-let eventClient = EventClient(accessKey: "<Your App ID here>")
+let eventClient = EventClient(accessKey: "<Your App's access key here>")
 ```
 
 The import process consists of 3 steps:
