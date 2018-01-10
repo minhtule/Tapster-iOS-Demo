@@ -17,7 +17,7 @@ class ComicCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imagesCollectionView: UICollectionView!
     @IBOutlet weak var overlayView: UIView!
     
-    let imageCache = NSCache()
+    let imageCache = NSCache<NSString, AnyObject>()
     
     override func awakeFromNib() {
         layer.shadowOpacity = 0.5
@@ -43,28 +43,28 @@ class ComicCollectionViewCell: UICollectionViewCell {
 }
 
 extension ComicCollectionViewCell: UICollectionViewDataSource {
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comic.imageURLs.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ComicImageCellReuseIdentifier, forIndexPath: indexPath) as! ComicImageCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ComicImageCellReuseIdentifier, for: indexPath) as! ComicImageCollectionViewCell
         let imageURL = comic.imageURLs[indexPath.item]
         cell.position = indexPath.item
         cell.delegate = self
-        cell.image = imageCache.objectForKey(imageURL) as? UIImage
+        cell.image = imageCache.object(forKey: imageURL as NSString) as? UIImage
         cell.imageURL = imageURL
         return cell
     }
 }
 
 extension ComicCollectionViewCell: UICollectionViewDelegateFlowLayout {
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // If the image is already downloaded, use the image aspect ratio to calculate the height
         let imageURL = comic.imageURLs[indexPath.item]
         let width = collectionView.bounds.size.width
         
-        if let image = imageCache.objectForKey(imageURL) as? UIImage {
+        if let image = imageCache.object(forKey: imageURL as NSString) as? UIImage {
             return CGSize(width: width, height: width / image.aspectRatio)
         }
         
@@ -72,7 +72,7 @@ extension ComicCollectionViewCell: UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: width)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         let overlayViewHeight = overlayView.frame.height
 
         // Give a padding empty space so that the last comic image is displayed above the overlay.
@@ -82,8 +82,8 @@ extension ComicCollectionViewCell: UICollectionViewDelegateFlowLayout {
 
 extension ComicCollectionViewCell : ComicImageCollectionViewCellDelegate {
     func comicImageCollectionViewCellDidLoadImage(cell: ComicImageCollectionViewCell) {
-        if imageCache.objectForKey(cell.imageURL) == nil {
-            imageCache.setObject(cell.image, forKey: cell.imageURL)
+        if imageCache.object(forKey: cell.imageURL as NSString) == nil {
+            imageCache.setObject(cell.image, forKey: cell.imageURL as NSString)
         }
         
         // Refresh the layout
@@ -95,8 +95,8 @@ extension ComicCollectionViewCell : ComicImageCollectionViewCellDelegate {
 // MARK: - ComicImageCollectionViewFlowLayout
 
 class ComicImageCollectionViewFlowLayout: UICollectionViewFlowLayout {
-    override func invalidationContextForBoundsChange(newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
-        let context = super.invalidationContextForBoundsChange(newBounds) as! UICollectionViewFlowLayoutInvalidationContext
+    override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
+        let context = super.invalidationContext(forBoundsChange: newBounds) as! UICollectionViewFlowLayoutInvalidationContext
         context.invalidateFlowLayoutDelegateMetrics = true
         return context
     }
@@ -121,17 +121,18 @@ class ComicImageCollectionViewCell: UICollectionViewCell {
     var imageURL: String! {
         didSet {            
             if image != nil {
-                imageView.contentMode = .ScaleAspectFit
+                imageView.contentMode = .scaleAspectFit
                 imageView.image = image
             } else {
-                request = Alamofire.request(.GET, imageURL).responseImage { (request, _, image, error) in
-                    if error == nil && image != nil && request.URLString == self.imageURL {
-                        self.image = image
-                        self.imageView.contentMode = .ScaleAspectFit
-                        self.imageView.image = image!
-                        self.delegate?.comicImageCollectionViewCellDidLoadImage(self)
-                    }
-                }
+                //XMEXME
+//                request = Alamofire.request(.GET, imageURL).responseImage { (request, _, image, error) in
+//                    if error == nil && image != nil && request.URLString == self.imageURL {
+//                        self.image = image
+//                        self.imageView.contentMode = .ScaleAspectFit
+//                        self.imageView.image = image!
+//                        self.delegate?.comicImageCollectionViewCellDidLoadImage(self)
+//                    }
+//                }
             }
         }
     }
@@ -142,7 +143,7 @@ class ComicImageCollectionViewCell: UICollectionViewCell {
         request?.cancel()
         position = nil
         image = nil
-        imageView.contentMode = .Center
+        imageView.contentMode = .center
         imageView.image = UIImage(named: "refresh")
         delegate = nil
     }

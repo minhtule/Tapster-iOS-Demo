@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PredictionIOSDK
+import PredictionIO
 
 class DataViewController: UIViewController {
     let userIDColumn = 0
@@ -26,59 +26,52 @@ class DataViewController: UIViewController {
         // MARK: - episodes data
         let episodeData = CSVData(fileName: "episode_list")
         
-        println("Found \(episodeData.rows.count) unique episode")
-        println("Sending episodes data...")
+        print("Found \(episodeData.rows.count) unique episode")
+        print("Sending episodes data...")
         
         for row in episodeData.rows {
-            eventClient.setItem(row[0],
-                properties: [
-                    "title": row[1],
-                    "categories": convertCategories(row[2]),
-                    "imageURLs": convertImageURLs(row[4]),
-                ],
-                completionHandler: { (_, _, data, error) -> Void in
-
-                    // Only report if an error occurs
-                    if error != nil {
-                        println(data)
-                        println("Sending episode: \(row[0]) has error \(error)")
-                    }
+            let properties: [String: Any] = [
+                "title": row[1],
+                "categories": convertCategories(row[2]),
+                "imageURLs": convertImageURLs(row[4]),
+            ]
+            eventClient.setItem(itemID: row[0], properties: properties) { data, error in
+                // Only report if an error occurs
+                if let error = error {
+                    print("Resonse \(String(describing: data))")
+                    print("Sending episode: \(row[0]) has error \(error)")
                 }
-            )
+            }
         }
         
-        println("Done with episodes!")
+        print("Done with episodes!")
         
         // MARK: - users data
         
-        let readStartTime = NSDate()
         let likesData = CSVData(fileName: "user_list")
-        let userIDs = likesData.uniqueEntries(userIDColumn)
+        let userIDs = likesData.uniqueEntries(column: userIDColumn)
         
-        println("Found \(userIDs.count) unique user IDs")
-        println("Sending users data...")
+        print("Found \(userIDs.count) unique user IDs")
+        print("Sending users data...")
         
         for userID in userIDs {
-            eventClient.setUser(userID,
-                properties: [:],
-                completionHandler: { (_, _, data, error) -> Void in
-                    // Only report if an error occurs
-                    if error != nil {
-                        println(data)
-                        println("Sending user: \(userID) has error \(error)")
-                    }
+            eventClient.setUser(userID: userID, properties: [:]) { data, error in
+                // Only report if an error occurs
+                if let error = error {
+                    print("Resonse \(String(describing: data))")
+                    print("Sending user: \(userID) has error \(error)")
                 }
-            )
+            }
         }
         
-        println("Done with users!")
+        print("Done with users!")
         
         // MARK: - likes data
         
-        println("Sending likes data...")
+        print("Sending likes data...")
         
-        let startTime = NSDate()
-        println("Start time = \(startTime)")
+        let startTime = Date()
+        print("Start time = \(startTime)")
 
         globalLikeIndex = numberOfConcurrentRequests
         for i in 0..<numberOfConcurrentRequests {
@@ -87,36 +80,31 @@ class DataViewController: UIViewController {
         
     }
     
-    private func convertCategories(categories: String) -> [String] {
-        return categories.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
+    private func convertCategories(_ categories: String) -> [String] {
+        return categories.components(separatedBy: CharacterSet(charactersIn: ","))
     }
     
-    private func convertImageURLs(imageURLs: String) -> [String] {
-        return imageURLs.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ";"))
+    private func convertImageURLs(_ imageURLs: String) -> [String] {
+        return imageURLs.components(separatedBy: CharacterSet(charactersIn: ";"))
     }
     
-    private func sendLikeData(likesData: CSVData, rowIndex: Int) {
+    private func sendLikeData(_ likesData: CSVData, rowIndex: Int) {
         let row = likesData.rows[rowIndex]
-        eventClient.recordAction("like",
-            byUserID: row[0],
-            itemID: row[1],
-            properties: [:],
-            completionHandler: { (_, _, _, error) in
-                if error != nil {
-                    println("Sending like for user \(row[0]) and item \(row[1]) has error \(error)")
-                }
-                
-                if self.globalLikeIndex < likesData.rows.count {
-                    self.sendLikeData(likesData, rowIndex: self.globalLikeIndex)
-                    ++self.globalLikeIndex
-                } else if self.globalLikeIndex == likesData.rows.count {
-                    ++self.finishingCounter
-                    if self.finishingCounter == self.numberOfConcurrentRequests {
-                        let endTime = NSDate()
-                        println("End time = \(endTime)")
-                    }
+        eventClient.recordAction("like", byUserID: row[0], onItemID: row[1]) { _, error in
+            if let error = error {
+                print("Sending like for user \(row[0]) and item \(row[1]) has error \(error)")
+            }
+
+            if self.globalLikeIndex < likesData.rows.count {
+                self.sendLikeData(likesData, rowIndex: self.globalLikeIndex)
+                self.globalLikeIndex += 1
+            } else if self.globalLikeIndex == likesData.rows.count {
+                self.finishingCounter += 1
+                if self.finishingCounter == self.numberOfConcurrentRequests {
+                    let endTime = Date()
+                    print("End time = \(endTime)")
                 }
             }
-        )
+        }
     }
 }

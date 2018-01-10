@@ -22,7 +22,6 @@
 		41C9E8791AC1A2FB006DD8A2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C9E8781AC1A2FB006DD8A2 /* Models.swift */; };
 		41C9E87B1AC1B6BA006DD8A2 /* Alamofire+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C9E87A1AC1B6BA006DD8A2 /* Alamofire+UIImage.swift */; };
 		41EFA9631AC5B60E00542F3F /* UIImage+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EFA9621AC5B60E00542F3F /* UIImage+Extra.swift */; };
-		B81CE02ADD1C656DA9185261 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E964669D7C9FBE5A5974ED35 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		FBE1F7BCDBF78DBB5BA0D368 /* Pods_Tapster_iOS_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA562EE174DC474502D8113D /* Pods_Tapster_iOS_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +60,6 @@
 		9445C5C3332968FB8D4D3DA0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BA562EE174DC474502D8113D /* Pods_Tapster_iOS_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tapster_iOS_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C51133ABBFD93B21DCEFD601 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		E964669D7C9FBE5A5974ED35 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +67,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B81CE02ADD1C656DA9185261 /* Pods.framework in Frameworks */,
 				FBE1F7BCDBF78DBB5BA0D368 /* Pods_Tapster_iOS_Demo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,7 +178,6 @@
 		5743E4EE2A4D12F348E978BD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E964669D7C9FBE5A5974ED35 /* Pods.framework */,
 				BA562EE174DC474502D8113D /* Pods_Tapster_iOS_Demo.framework */,
 			);
 			name = Frameworks;
@@ -495,7 +491,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41223C1588DA8A60F9CD8415 /* Pods-Tapster iOS Demo.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -512,7 +508,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 12EA930A9C405646EB8A98EA /* Pods-Tapster iOS Demo.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

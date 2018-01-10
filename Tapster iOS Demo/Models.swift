@@ -7,39 +7,48 @@
 //
 
 import Foundation
-import ObjectMapper
 
-struct Result: Mappable {
-    var comics: [Comic]!
-    
-    init() {
+struct RecommendationResponse: Decodable {
+    let comics: [Comic]
+
+    enum CodingKeys: String, CodingKey {
+        case comics = "itemScores"
     }
-    
-    mutating func mapping(map: Map) {
-        comics <= map["itemScores"]
-    }
+//    init() {
+//    }
+//
+//    mutating func mapping(map: Map) {
+//        comics <= map["itemScores"]
+//    }
 }
 
-struct Comic: Mappable {
-    var ID: String!
-    var title: String!
-    var imageURLs: [String]!
-    var score: Double!
-    
-    init() {
+struct Comic: Decodable {
+    let id: String
+    let title: String
+    let imageURLs: [String]
+    let score: Double
+
+    enum CodingKeys: String, CodingKey {
+        case id = "itemID"
+        case title
+        case imageURLs
+        case score
     }
-    
-    init(ID: String, title: String, imageURLs: [String], score: Double) {
-        self.ID = ID
-        self.title = title
-        self.imageURLs = imageURLs
-        self.score = score
-    }
-    
-    mutating func mapping(map: Map) {
-        ID <= map["itemID"]
-        title <= map["title"]
-        imageURLs <= map["imageURLs"]
-        score <= map["score"]
-    }
+
+//    init() {
+//    }
+//
+//    init(ID: String, title: String, imageURLs: [String], score: Double) {
+//        self.ID = ID
+//        self.title = title
+//        self.imageURLs = imageURLs
+//        self.score = score
+//    }
+//
+//    mutating func mapping(map: Map) {
+//        ID <= map["itemID"]
+//        title <= map["title"]
+//        imageURLs <= map["imageURLs"]
+//        score <= map["score"]
+//    }
 }

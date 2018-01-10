@@ -8,8 +8,7 @@
 
 import UIKit
 import Alamofire
-import ObjectMapper
-import PredictionIOSDK
+import PredictionIO
 
 class ComicViewController : UIViewController {
     
@@ -34,16 +33,16 @@ class ComicViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.viewForBaselineLayout()?.layer.speed = 0.75
+        collectionView.forBaselineLayout().layer.speed = 0.75
         collectionView.customDelegate = self
         collectionViewLayout.delegate = self
 
-        dislikeButton.imageView?.contentMode = .ScaleAspectFit
-        likeButton.imageView?.contentMode = .ScaleAspectFit
+        dislikeButton.imageView?.contentMode = .scaleAspectFit
+        likeButton.imageView?.contentMode = .scaleAspectFit
         
         // Start with 2 random comics
         comics = randomizeComics(numberOfComics: 2)
-        displayedComicIDs.extend(comics.map { $0.ID })
+        displayedComicIDs += comics.map { $0.id }
     }
     
     @IBAction func handleSwipeRightGesture(sender: UISwipeGestureRecognizer) {
@@ -83,7 +82,7 @@ class ComicViewController : UIViewController {
     }
     
     private func likeComic() {
-        likedComicIDs.append(comics[0].ID)
+        likedComicIDs.append(comics[0].id)
         directionComicDeleted = .Right
         updateComics()
     }
@@ -94,14 +93,14 @@ class ComicViewController : UIViewController {
     }
     
     private func updateComics() {
-        let comicIDs = comics.map { $0.ID }
-        println("current comics: \(comicIDs)")
-        comics.removeAtIndex(0)
+        let comicIDs = comics.map { $0.id }
+        print("current comics: \(comicIDs)")
+        comics.remove(at: 0)
         
         // Animate the removal of the top comic
         isAnimating = true
         collectionView.performBatchUpdates({
-            self.collectionView.deleteItemsAtIndexPaths([NSIndexPath(forItem: 0, inSection: 0)])
+            self.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
         }, completion: { (finished) in
             self.isAnimating = false
         })
@@ -115,28 +114,26 @@ class ComicViewController : UIViewController {
             return
         }
         
-        println("querying ...")
-        println("liked: \(likedComicIDs)")
-        println("blackList: \(displayedComicIDs)")
-        let query: [String: NSObject] = [
+        print("querying ...")
+        print("liked: \(likedComicIDs)")
+        print("blackList: \(displayedComicIDs)")
+        let query: [String: Any] = [
             "num": 1,
             "items": likedComicIDs,
             "blackList": displayedComicIDs
         ]
         
-        engineClient.sendQuery(query, completionHandler: { (request, response, data, error) in
-            if let result = Mapper<Result>().map(data) {
-                if result.comics.count > 0 {
-                    self.addAndAnimateNewComic(result.comics[0])
-                }
-            }
-        })
+        engineClient.sendQuery(query, responseType: RecommendationResponse.self) { response, error in
+            guard let response = response, response.comics.count > 0 else { return }
+
+            self.addAndAnimateNewComic(response.comics[0])
+        }
     }
     
-    private func addAndAnimateNewComic(comic: Comic) {
+    private func addAndAnimateNewComic(_ comic: Comic) {
         comics.append(comic)
-        displayedComicIDs.append(comic.ID)
-        collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: comics.count - 1, inSection: 0)])
+        displayedComicIDs.append(comic.id)
+        collectionView.insertItems(at: [IndexPath(item: comics.count - 1, section: 0)])
     }
     
     private func randomizeComics(numberOfComics: Int = 2) -> [Comic] {
@@ -147,13 +144,13 @@ class ComicViewController : UIViewController {
             randomizedNumbers[random] = true
         }
         
-        return map(randomizedNumbers.keys) { (rowIndex: Int) -> Comic in
+        return randomizedNumbers.keys.map { (rowIndex: Int) -> Comic in
             let row = self.comicsData.rows[rowIndex]
 
             return Comic(
-                ID: row[0],
+                id: row[0],
                 title: row[1],
-                imageURLs: row[4].componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ";")),
+                imageURLs: row[4].components(separatedBy: CharacterSet(charactersIn: ";")),
                 score: 0)
         }
     }
@@ -161,13 +158,13 @@ class ComicViewController : UIViewController {
 
 extension ComicViewController: UICollectionViewDataSource {
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comics.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ComicCellReuseIdentifier, forIndexPath: indexPath) as! ComicCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ComicCellReuseIdentifier, for: indexPath) as! ComicCollectionViewCell
         cell.comic = comics[indexPath.item]
         
         return cell
@@ -175,15 +172,15 @@ extension ComicViewController: UICollectionViewDataSource {
 }
 
 extension ComicViewController: CustomCollectionViewDelegate {
-    func collectionViewDidReloadData(collectionView: CustomCollectionView) {
+    func collectionViewDidReloadData(_ collectionView: CustomCollectionView) {
         updateNavigationItemTitle()
     }
     
-    func collectionView(collectionView: CustomCollectionView, didInsertItemsAtIndexPaths indexPaths: [AnyObject]) {
+    func collectionView(_ collectionView: CustomCollectionView, didInsertItemsAt indexPaths: [IndexPath]) {
         updateNavigationItemTitle()
     }
     
-    func collectionView(collectionView: CustomCollectionView, didDeleteItemsAtIndexPaths indexPaths: [AnyObject]) {
+    func collectionView(_ collectionView: CustomCollectionView, didDeleteItemsAt indexPaths: [IndexPath]) {
         updateNavigationItemTitle()
     }
     
@@ -206,9 +203,9 @@ extension ComicViewController: ComicCollectionViewLayoutDelegate {
 // MARK: CustomCollectionView
 
 protocol CustomCollectionViewDelegate: class {
-    func collectionViewDidReloadData(collectionView: CustomCollectionView)
-    func collectionView(collectionView: CustomCollectionView, didInsertItemsAtIndexPaths indexPaths: [AnyObject])
-    func collectionView(collectionView: CustomCollectionView, didDeleteItemsAtIndexPaths indexPaths: [AnyObject])
+    func collectionViewDidReloadData(_ collectionView: CustomCollectionView)
+    func collectionView(_ collectionView: CustomCollectionView, didInsertItemsAt indexPaths: [IndexPath])
+    func collectionView(_ collectionView: CustomCollectionView, didDeleteItemsAt indexPaths: [IndexPath])
 }
 
 class CustomCollectionView: UICollectionView {
@@ -219,14 +216,14 @@ class CustomCollectionView: UICollectionView {
         self.customDelegate?.collectionViewDidReloadData(self)
     }
     
-    override func insertItemsAtIndexPaths(indexPaths: [AnyObject]) {
-        super.insertItemsAtIndexPaths(indexPaths)
-        self.customDelegate?.collectionView(self, didInsertItemsAtIndexPaths: indexPaths)
+    override func insertItems(at indexPaths: [IndexPath]) {
+        super.insertItems(at: indexPaths)
+        self.customDelegate?.collectionView(self, didInsertItemsAt: indexPaths)
     }
     
-    override func deleteItemsAtIndexPaths(indexPaths: [AnyObject]) {
-        super.deleteItemsAtIndexPaths(indexPaths)
-        self.customDelegate?.collectionView(self, didDeleteItemsAtIndexPaths: indexPaths)
+    override func deleteItems(at indexPaths: [IndexPath]) {
+        super.deleteItems(at: indexPaths)
+        self.customDelegate?.collectionView(self, didDeleteItemsAt: indexPaths)
     }
 }
 
@@ -244,36 +241,36 @@ protocol ComicCollectionViewLayoutDelegate: class {
 class ComicCollectionViewLayout : UICollectionViewLayout {
     let xDisappearingOffsetScale: CGFloat = 1.5
     var delegate: ComicCollectionViewLayoutDelegate?
-    var removedIndexPaths = [NSIndexPath]()
+    var removedIndexPaths = [IndexPath]()
     
-    override func collectionViewContentSize() -> CGSize {
+    override var collectionViewContentSize: CGSize {
         return collectionView!.bounds.size
     }
     
-    override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         let oldBounds = collectionView!.bounds
-        if CGRectEqualToRect(oldBounds, newBounds) {
+        if oldBounds == newBounds {
             return false
         }
         return true
     }
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         // Only display the first 2 commics
-        let numberOfComicsDisplayed = min(collectionView!.numberOfItemsInSection(0), 2)
-        return map(0..<numberOfComicsDisplayed) {
-            self.layoutAttributesForItemAtIndexPath(NSIndexPath(forItem: $0, inSection: 0))
+        let numberOfComicsDisplayed = min(collectionView!.numberOfItems(inSection: 0), 2)
+        return (0..<numberOfComicsDisplayed).map {
+            self.layoutAttributesForItem(at: IndexPath(item: $0, section: 0))
         }
     }
     
-    override func prepareForCollectionViewUpdates(updateItems: [AnyObject]!) {
-        super.prepareForCollectionViewUpdates(updateItems)
+    override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
+        super.prepare(forCollectionViewUpdates: updateItems)
         
-        var removedIndexPaths = [NSIndexPath]()
+        var removedIndexPaths = [IndexPath]()
         
-        for updateItem in updateItems as! [UICollectionViewUpdateItem] {
+        for updateItem in updateItems {
             switch updateItem.updateAction {
-            case .Delete:
+            case .delete:
                 removedIndexPaths.append(updateItem.indexPathBeforeUpdate!)
             default:
                 break
@@ -287,19 +284,19 @@ class ComicCollectionViewLayout : UICollectionViewLayout {
         self.removedIndexPaths = []
     }
     
-    override func finalLayoutAttributesForDisappearingItemAtIndexPath(itemIndexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        var layoutAttributes = super.finalLayoutAttributesForDisappearingItemAtIndexPath(itemIndexPath)
+    override func finalLayoutAttributesForDisappearingItem(at itemIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        var layoutAttributes = super.finalLayoutAttributesForDisappearingItem(at: itemIndexPath)
         
-        if itemIndexPath.item == 0 && contains(removedIndexPaths, itemIndexPath) {
-            layoutAttributes = layoutAttributesForItemAtIndexPath(itemIndexPath)
+        if itemIndexPath.item == 0 && removedIndexPaths.contains(itemIndexPath) {
+            layoutAttributes = layoutAttributesForItem(at: itemIndexPath)
             let dx: CGFloat = {
                 // We calculate dx with a certain such that the final position is complete 
                 // off the screen, including the shadow. So when the cell is removed, 
                 // there's no sudden disappearing.
                 switch self.delegate?.directionToDeleteItem() {
-                case .Some(.Left):
+                case .some(.Left):
                     return -layoutAttributes!.size.width * self.xDisappearingOffsetScale
-                case .Some(.Right):
+                case .some(.Right):
                     return layoutAttributes!.size.width * self.xDisappearingOffsetScale
                 default:
                     return 0
@@ -313,14 +310,14 @@ class ComicCollectionViewLayout : UICollectionViewLayout {
         return layoutAttributes
     }
     
-    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes {
         let scale = CGFloat(2 - indexPath.item) / 2.0
-        let layoutAttributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+        let layoutAttributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
 
         layoutAttributes.size = collectionView!.frame.size
-        layoutAttributes.center = CGPoint(x: CGRectGetMidX(collectionView!.bounds), y: CGRectGetMidY(collectionView!.bounds))
+        layoutAttributes.center = CGPoint(x: collectionView!.bounds.midX, y: collectionView!.bounds.midY)
         layoutAttributes.zIndex = -indexPath.item
-        layoutAttributes.transform = CGAffineTransformMakeScale(scale, scale)
+        layoutAttributes.transform = CGAffineTransform(scaleX: scale, y: scale)
         
         return layoutAttributes
     }

@@ -8,20 +8,19 @@
 
 import Foundation
 
-let EntryPattern = "(?:,|^)(\"[^\"]*\"|[^\",]*)"
+let entryPattern = "(?:,|^)(\"[^\"]*\"|[^\",]*)"
 
 class CSVData {
     let headers: [String]
     let rows: [[String]]
     
     init(fileName: String, delimeter: String = ",") {
-        var error: NSError?
         var headers = [String]()
         var rows = [[String]]()
         
-        if let fileURL = NSBundle.mainBundle().URLForResource(fileName, withExtension: "csv") {
-            if let csvString = String(contentsOfURL: fileURL, encoding: NSUTF8StringEncoding, error: &error) {
-                let csvLines = csvString.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet()).filter { count($0) > 0 }
+        if let fileURL = Bundle.main.url(forResource: fileName, withExtension: "csv") {
+            if let csvString = try? String(contentsOf: fileURL, encoding: .utf8) {
+                let csvLines = csvString.components(separatedBy: CharacterSet.newlines).filter { $0.count > 0 }
                 var lines = [[String]]()
                 
                 for line in csvLines {
@@ -47,11 +46,13 @@ class CSVData {
         return Array(uniqueEntries.keys)
     }
     
-    private class func splitLine(line: String) -> [String] {
-        return matchedGroups(EntryPattern, inString: line).map { (group: String) -> String in
+    private class func splitLine(_ line: String) -> [String] {
+        return matchedGroups(pattern: entryPattern, inString: line).map { (group: String) -> String in
             if group.hasPrefix("\"") {
                 // Remove the quotes
-                return group.substringWithRange(Range<String.Index>(start: advance(group.startIndex, 1), end: advance(group.endIndex, -1)))
+                let left = group.index(after: group.startIndex)
+                let right = group.index(before: group.endIndex)
+                return String(group[left..<right])
             } else {
                 return group
             }
@@ -59,9 +60,9 @@ class CSVData {
     }
     
     private class func matchedGroups(pattern: String, inString string: String) -> [String] {
-        let regex = NSRegularExpression(pattern: pattern, options: .allZeros, error: nil)
-        let range = NSMakeRange(0, count(string))
-        let matches = regex?.matchesInString(string, options: .allZeros, range: range) as! [NSTextCheckingResult]
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let range = NSMakeRange(0, string.count)
+        let matches = regex.matches(in: string, options: [], range: range)
         
         var groupMatches = [String]()
         for match in matches {
@@ -69,7 +70,7 @@ class CSVData {
             
             // Ignore the group that is the match itself
             for group in 1..<rangeCount {
-                groupMatches.append((string as NSString).substringWithRange(match.rangeAtIndex(group)))
+                groupMatches.append((string as NSString).substring(with: match.range(at: group)))
             }
         }
         
