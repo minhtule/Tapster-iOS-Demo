@@ -1,5 +1,8 @@
 # Tapster iOS Demo
 
+[![Build Status](https://travis-ci.org/minhtule/Tapster-iOS-Demo.svg?branch=master)](https://travis-ci.org/minhtule/Tapster-iOS-Demo)
+
+
 This demo demonstrates how to use the PredictionIO Swift SDK to integrate an iOS app with a PredictionIO engine to make your mobile app more interesting.
 
 ### Requirements
