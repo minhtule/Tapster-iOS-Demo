@@ -33,7 +33,7 @@ class ComicViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.forBaselineLayout().layer.speed = 0.75
+        collectionView.layer.speed = 0.75
         collectionView.customDelegate = self
         collectionViewLayout.delegate = self
 
