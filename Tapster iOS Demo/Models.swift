@@ -14,12 +14,6 @@ struct RecommendationResponse: Decodable {
     enum CodingKeys: String, CodingKey {
         case comics = "itemScores"
     }
-//    init() {
-//    }
-//
-//    mutating func mapping(map: Map) {
-//        comics <= map["itemScores"]
-//    }
 }
 
 struct Comic: Decodable {
@@ -34,21 +28,4 @@ struct Comic: Decodable {
         case imageURLs
         case score
     }
-
-//    init() {
-//    }
-//
-//    init(ID: String, title: String, imageURLs: [String], score: Double) {
-//        self.ID = ID
-//        self.title = title
-//        self.imageURLs = imageURLs
-//        self.score = score
-//    }
-//
-//    mutating func mapping(map: Map) {
-//        ID <= map["itemID"]
-//        title <= map["title"]
-//        imageURLs <= map["imageURLs"]
-//        score <= map["score"]
-//    }
 }

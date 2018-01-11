@@ -23,7 +23,7 @@ class ComicViewController : UIViewController {
     lazy var comicsData: CSVData = CSVData(fileName: "seed_episode_list")
     
     let engineClient = EngineClient()
-    var directionComicDeleted: Direction = .Right
+    var directionComicDeleted: Direction = .right
     var likedComicIDs = [String]()
     var displayedComicIDs = [String]()
     var comics = [Comic]()
@@ -83,12 +83,12 @@ class ComicViewController : UIViewController {
     
     private func likeComic() {
         likedComicIDs.append(comics[0].id)
-        directionComicDeleted = .Right
+        directionComicDeleted = .right
         updateComics()
     }
     
     private func dislikeComic() {
-        directionComicDeleted = .Left
+        directionComicDeleted = .left
         updateComics()
     }
     
@@ -101,7 +101,7 @@ class ComicViewController : UIViewController {
         isAnimating = true
         collectionView.performBatchUpdates({
             self.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
-        }, completion: { (finished) in
+        }, completion: { finished in
             self.isAnimating = false
         })
         
@@ -146,7 +146,7 @@ class ComicViewController : UIViewController {
             randomizedNumbers[random] = true
         }
         
-        return randomizedNumbers.keys.map { (rowIndex: Int) -> Comic in
+        return randomizedNumbers.keys.map { rowIndex in
             let row = self.comicsData.rows[rowIndex]
 
             return Comic(
@@ -233,7 +233,7 @@ class CustomCollectionView: UICollectionView {
 // MARK: Layout
 
 enum Direction {
-    case Left, Up, Right, Down
+    case left, up, right, down
 }
 
 protocol ComicCollectionViewLayoutDelegate: class {
@@ -296,9 +296,9 @@ class ComicCollectionViewLayout : UICollectionViewLayout {
                 // off the screen, including the shadow. So when the cell is removed, 
                 // there's no sudden disappearing.
                 switch self.delegate?.directionToDeleteItem() {
-                case .some(.Left):
+                case .some(.left):
                     return -layoutAttributes!.size.width * self.xDisappearingOffsetScale
-                case .some(.Right):
+                case .some(.right):
                     return layoutAttributes!.size.width * self.xDisappearingOffsetScale
                 default:
                     return 0

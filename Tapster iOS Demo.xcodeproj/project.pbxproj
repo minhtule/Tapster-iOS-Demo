@@ -20,7 +20,6 @@
 		41C59BC61ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C59BC51ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift */; };
 		41C9E8771AC19D34006DD8A2 /* CSVData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C9E8761AC19D34006DD8A2 /* CSVData.swift */; };
 		41C9E8791AC1A2FB006DD8A2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C9E8781AC1A2FB006DD8A2 /* Models.swift */; };
-		41C9E87B1AC1B6BA006DD8A2 /* Alamofire+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C9E87A1AC1B6BA006DD8A2 /* Alamofire+UIImage.swift */; };
 		41EFA9631AC5B60E00542F3F /* UIImage+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EFA9621AC5B60E00542F3F /* UIImage+Extra.swift */; };
 		FBE1F7BCDBF78DBB5BA0D368 /* Pods_Tapster_iOS_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA562EE174DC474502D8113D /* Pods_Tapster_iOS_Demo.framework */; };
 /* End PBXBuildFile section */
@@ -55,7 +54,6 @@
 		41C59BC51ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tapster_iOS_DemoTests.swift; sourceTree = "<group>"; };
 		41C9E8761AC19D34006DD8A2 /* CSVData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVData.swift; sourceTree = "<group>"; };
 		41C9E8781AC1A2FB006DD8A2 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		41C9E87A1AC1B6BA006DD8A2 /* Alamofire+UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Alamofire+UIImage.swift"; sourceTree = "<group>"; };
 		41EFA9621AC5B60E00542F3F /* UIImage+Extra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extra.swift"; sourceTree = "<group>"; };
 		9445C5C3332968FB8D4D3DA0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BA562EE174DC474502D8113D /* Pods_Tapster_iOS_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tapster_iOS_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,7 +93,6 @@
 		415BCF811AE5137200AF3168 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				41C9E87A1AC1B6BA006DD8A2 /* Alamofire+UIImage.swift */,
 				41EFA9621AC5B60E00542F3F /* UIImage+Extra.swift */,
 				417D270D1AC9778B009C150D /* CGPoint+Extra.swift */,
 			);
@@ -351,7 +348,6 @@
 				4147B0361AC547410012B979 /* ComicCollectionViewCell.swift in Sources */,
 				417D270E1AC9778B009C150D /* CGPoint+Extra.swift in Sources */,
 				41C59BB01ABFF513001A1B97 /* AppDelegate.swift in Sources */,
-				41C9E87B1AC1B6BA006DD8A2 /* Alamofire+UIImage.swift in Sources */,
 				41C9E8771AC19D34006DD8A2 /* CSVData.swift in Sources */,
 				417B55DA1AC06E4A005EE0DB /* ComicViewController.swift in Sources */,
 				41C9E8791AC1A2FB006DD8A2 /* Models.swift in Sources */,

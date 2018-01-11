@@ -121,7 +121,7 @@ class ComicImageCollectionViewCell: UICollectionViewCell {
     
     var imageURL: String! {
         didSet {            
-            if image != nil {
+            if let image = image {
                 imageView.contentMode = .scaleAspectFit
                 imageView.image = image
             } else {
