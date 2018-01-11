@@ -15,12 +15,12 @@ class DataViewController: UIViewController {
     @IBAction func importDataButtonAction(_ sender: UIButton) {
         self.readCSVDataAndImport()
     }
-    
+
     private func readCSVDataAndImport() {
-        
+
         // MARK: - episodes data
         let episodeData = CSVData(fileName: "episode_list")
-        
+
         print("Found \(episodeData.rows.count) unique episode")
         print("Sending episodes data...")
 
@@ -28,16 +28,16 @@ class DataViewController: UIViewController {
             let properties: [String: Any] = [
                 "title": row[1],
                 "categories": convertCategories(row[2]),
-                "imageURLs": convertImageURLs(row[4]),
-                ]
+                "imageURLs": convertImageURLs(row[4])
+            ]
             return Event(event: Event.setEvent, entityType: Event.itemEntityType, entityID: row[0], properties: properties)
         }
 
         // MARK: - users data
-        
+
         let likesData = CSVData(fileName: "user_list")
         let userIDs = likesData.uniqueEntries(column: 0)
-        
+
         print("Found \(userIDs.count) unique user IDs")
         print("Sending users data...")
 
@@ -47,18 +47,18 @@ class DataViewController: UIViewController {
         }
 
         // MARK: - likes data
-        
+
         print("Sending likes data...")
 
         processRows(likesData.rows, messagePrefix: "Sending likes") { row in
             return Event(event: "like", entityType: Event.userEntityType, entityID: row[0], targetEntity: (Event.itemEntityType, row[1]))
         }
     }
-    
+
     private func convertCategories(_ categories: String) -> [String] {
         return categories.components(separatedBy: CharacterSet(charactersIn: ","))
     }
-    
+
     private func convertImageURLs(_ imageURLs: String) -> [String] {
         return imageURLs.components(separatedBy: CharacterSet(charactersIn: ";"))
     }
