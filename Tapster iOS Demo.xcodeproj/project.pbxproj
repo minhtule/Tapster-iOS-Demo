@@ -17,22 +17,11 @@
 		41C59BB01ABFF513001A1B97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C59BAF1ABFF513001A1B97 /* AppDelegate.swift */; };
 		41C59BB51ABFF513001A1B97 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41C59BB31ABFF513001A1B97 /* Main.storyboard */; };
 		41C59BB71ABFF513001A1B97 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41C59BB61ABFF513001A1B97 /* Images.xcassets */; };
-		41C59BC61ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C59BC51ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift */; };
 		41C9E8771AC19D34006DD8A2 /* CSVData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C9E8761AC19D34006DD8A2 /* CSVData.swift */; };
 		41C9E8791AC1A2FB006DD8A2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C9E8781AC1A2FB006DD8A2 /* Models.swift */; };
 		41EFA9631AC5B60E00542F3F /* UIImage+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EFA9621AC5B60E00542F3F /* UIImage+Extra.swift */; };
 		FBE1F7BCDBF78DBB5BA0D368 /* Pods_Tapster_iOS_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA562EE174DC474502D8113D /* Pods_Tapster_iOS_Demo.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		41C59BC01ABFF513001A1B97 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 41C59BA21ABFF513001A1B97 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41C59BA91ABFF513001A1B97;
-			remoteInfo = "Tapster iOS Demo";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		12EA930A9C405646EB8A98EA /* Pods-Tapster iOS Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tapster iOS Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tapster iOS Demo/Pods-Tapster iOS Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -49,9 +38,6 @@
 		41C59BAF1ABFF513001A1B97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41C59BB41ABFF513001A1B97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		41C59BB61ABFF513001A1B97 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		41C59BBF1ABFF513001A1B97 /* Tapster iOS DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tapster iOS DemoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		41C59BC41ABFF513001A1B97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		41C59BC51ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tapster_iOS_DemoTests.swift; sourceTree = "<group>"; };
 		41C9E8761AC19D34006DD8A2 /* CSVData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVData.swift; sourceTree = "<group>"; };
 		41C9E8781AC1A2FB006DD8A2 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		41EFA9621AC5B60E00542F3F /* UIImage+Extra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extra.swift"; sourceTree = "<group>"; };
@@ -66,13 +52,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBE1F7BCDBF78DBB5BA0D368 /* Pods_Tapster_iOS_Demo.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41C59BBC1ABFF513001A1B97 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,7 +93,6 @@
 			children = (
 				41A0B7A71AC00A0C003FFCC1 /* Data */,
 				41C59BAC1ABFF513001A1B97 /* Tapster iOS Demo */,
-				41C59BC21ABFF513001A1B97 /* Tapster iOS DemoTests */,
 				41C59BAB1ABFF513001A1B97 /* Products */,
 				0DE94279FBFD88FA8B5257A7 /* Pods */,
 				5743E4EE2A4D12F348E978BD /* Frameworks */,
@@ -125,7 +103,6 @@
 			isa = PBXGroup;
 			children = (
 				41C59BAA1ABFF513001A1B97 /* Tapster iOS Demo.app */,
-				41C59BBF1ABFF513001A1B97 /* Tapster iOS DemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -151,23 +128,6 @@
 			isa = PBXGroup;
 			children = (
 				41C59BAE1ABFF513001A1B97 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		41C59BC21ABFF513001A1B97 /* Tapster iOS DemoTests */ = {
-			isa = PBXGroup;
-			children = (
-				41C59BC51ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift */,
-				41C59BC31ABFF513001A1B97 /* Supporting Files */,
-			);
-			path = "Tapster iOS DemoTests";
-			sourceTree = "<group>";
-		};
-		41C59BC31ABFF513001A1B97 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				41C59BC41ABFF513001A1B97 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -203,24 +163,6 @@
 			productReference = 41C59BAA1ABFF513001A1B97 /* Tapster iOS Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		41C59BBE1ABFF513001A1B97 /* Tapster iOS DemoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 41C59BCC1ABFF513001A1B97 /* Build configuration list for PBXNativeTarget "Tapster iOS DemoTests" */;
-			buildPhases = (
-				41C59BBB1ABFF513001A1B97 /* Sources */,
-				41C59BBC1ABFF513001A1B97 /* Frameworks */,
-				41C59BBD1ABFF513001A1B97 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				41C59BC11ABFF513001A1B97 /* PBXTargetDependency */,
-			);
-			name = "Tapster iOS DemoTests";
-			productName = "Tapster iOS DemoTests";
-			productReference = 41C59BBF1ABFF513001A1B97 /* Tapster iOS DemoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -232,10 +174,6 @@
 				TargetAttributes = {
 					41C59BA91ABFF513001A1B97 = {
 						CreatedOnToolsVersion = 6.2;
-					};
-					41C59BBE1ABFF513001A1B97 = {
-						CreatedOnToolsVersion = 6.2;
-						TestTargetID = 41C59BA91ABFF513001A1B97;
 					};
 				};
 			};
@@ -253,7 +191,6 @@
 			projectRoot = "";
 			targets = (
 				41C59BA91ABFF513001A1B97 /* Tapster iOS Demo */,
-				41C59BBE1ABFF513001A1B97 /* Tapster iOS DemoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -268,13 +205,6 @@
 				4156802C1AE0A0FF00F9B5F1 /* seed_episode_list.csv in Resources */,
 				41C59BB71ABFF513001A1B97 /* Images.xcassets in Resources */,
 				41A0B7AB1AC00A0C003FFCC1 /* user_list.csv in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41C59BBD1ABFF513001A1B97 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,23 +284,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		41C59BBB1ABFF513001A1B97 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41C59BC61ABFF513001A1B97 /* Tapster_iOS_DemoTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		41C59BC11ABFF513001A1B97 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41C59BA91ABFF513001A1B97 /* Tapster iOS Demo */;
-			targetProxy = 41C59BC01ABFF513001A1B97 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		41C59BB31ABFF513001A1B97 /* Main.storyboard */ = {
@@ -519,42 +433,6 @@
 			};
 			name = Release;
 		};
-		41C59BCD1ABFF513001A1B97 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "Tapster iOS DemoTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "io.prediction.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tapster iOS Demo.app/Tapster iOS Demo";
-			};
-			name = Debug;
-		};
-		41C59BCE1ABFF513001A1B97 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "Tapster iOS DemoTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "io.prediction.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tapster iOS Demo.app/Tapster iOS Demo";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -572,15 +450,6 @@
 			buildConfigurations = (
 				41C59BCA1ABFF513001A1B97 /* Debug */,
 				41C59BCB1ABFF513001A1B97 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		41C59BCC1ABFF513001A1B97 /* Build configuration list for PBXNativeTarget "Tapster iOS DemoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				41C59BCD1ABFF513001A1B97 /* Debug */,
-				41C59BCE1ABFF513001A1B97 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
