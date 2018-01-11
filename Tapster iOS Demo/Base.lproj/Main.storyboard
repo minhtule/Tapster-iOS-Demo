@@ -167,13 +167,13 @@
                                         <connections>
                                             <outlet property="imagesCollectionView" destination="7sc-fw-r7E" id="zBn-OD-DOm"/>
                                             <outlet property="overlayView" destination="nUh-Zw-evD" id="wwc-Na-AuO"/>
-                                            <outletCollection property="gestureRecognizers" destination="jZi-eR-6bl" appends="YES" id="H6f-ly-Ms6"/>
-                                            <outletCollection property="gestureRecognizers" destination="V5v-3a-dkz" appends="YES" id="GZJ-8g-lVH"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
                                     <outlet property="dataSource" destination="eFW-E8-rPV" id="aom-W7-rjb"/>
+                                    <outletCollection property="gestureRecognizers" destination="hMQ-3l-UUn" appends="YES" id="8AQ-Kk-QM7"/>
+                                    <outletCollection property="gestureRecognizers" destination="fYv-jM-HPH" appends="YES" id="mDK-Uj-V2h"/>
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nUh-Zw-evD" userLabel="OverlayView">
@@ -270,14 +270,14 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xY5-ei-Fbr" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="jZi-eR-6bl" userLabel="Swipe Right Gesture Recognizer">
+                <swipeGestureRecognizer direction="right" id="hMQ-3l-UUn" userLabel="Swipe Right Gesture Recognizer">
                     <connections>
-                        <action selector="handleSwipeRightGesture:" destination="eFW-E8-rPV" id="nmo-x7-zUN"/>
+                        <action selector="handleSwipeRightGesture:" destination="eFW-E8-rPV" id="jvA-hU-N6x"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="left" id="V5v-3a-dkz" userLabel="Swipe Left Gesture Recognizer">
+                <swipeGestureRecognizer direction="left" id="fYv-jM-HPH" userLabel="Swipe Left Gesture Recognizer">
                     <connections>
-                        <action selector="handleSwipeLeftGesture:" destination="eFW-E8-rPV" id="xsJ-SY-pyi"/>
+                        <action selector="handleSwipeLeftGesture:" destination="eFW-E8-rPV" id="I1L-eg-kyX"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
