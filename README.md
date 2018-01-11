@@ -62,7 +62,7 @@ $ pio eventserver
 * Open the iOS project workspace `Tapster iOS Demo.xcworkspace` (created by CocoaPods) in Xcode. We need to add the PredictionIO app's access key to the iOS app's `EventClient`. In `DataViewController.swift`,
 
 ```swift
-let eventClient = EventClient(accessKey: "<Your App ID here>")
+let eventClient = EventClient(accessKey: "<Your app's access key here>")
 ```
 
 Run the simulator. In the home screen, tap `Import Data` and then `Run Import` button. The whole import will take a while. Check Xcode's debug console to see the progress.
