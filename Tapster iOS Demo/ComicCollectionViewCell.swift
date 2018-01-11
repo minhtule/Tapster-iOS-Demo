@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import AlamofireImage
 
 let ComicCellReuseIdentifier = "ComicCellReuseIdentifier"
 let ComicImageCellReuseIdentifier = "ComicImageCellReuseIdentifier"
@@ -80,8 +81,8 @@ extension ComicCollectionViewCell: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension ComicCollectionViewCell : ComicImageCollectionViewCellDelegate {
-    func comicImageCollectionViewCellDidLoadImage(cell: ComicImageCollectionViewCell) {
+extension ComicCollectionViewCell: ComicImageCollectionViewCellDelegate {
+    func comicImageCollectionViewCellDidLoadImage(_ cell: ComicImageCollectionViewCell) {
         if imageCache.object(forKey: cell.imageURL as NSString) == nil {
             imageCache.setObject(cell.image, forKey: cell.imageURL as NSString)
         }
@@ -106,7 +107,7 @@ class ComicImageCollectionViewFlowLayout: UICollectionViewFlowLayout {
 // MARK: - ComicImageCollectionViewCell
 
 protocol ComicImageCollectionViewCellDelegate: class {
-    func comicImageCollectionViewCellDidLoadImage(cell: ComicImageCollectionViewCell)
+    func comicImageCollectionViewCellDidLoadImage(_ cell: ComicImageCollectionViewCell)
 }
 
 class ComicImageCollectionViewCell: UICollectionViewCell {
@@ -124,15 +125,14 @@ class ComicImageCollectionViewCell: UICollectionViewCell {
                 imageView.contentMode = .scaleAspectFit
                 imageView.image = image
             } else {
-                //XMEXME
-//                request = Alamofire.request(.GET, imageURL).responseImage { (request, _, image, error) in
-//                    if error == nil && image != nil && request.URLString == self.imageURL {
-//                        self.image = image
-//                        self.imageView.contentMode = .ScaleAspectFit
-//                        self.imageView.image = image!
-//                        self.delegate?.comicImageCollectionViewCellDidLoadImage(self)
-//                    }
-//                }
+                request = Alamofire.request(imageURL).responseImage { response in
+                    if let image = response.result.value {
+                        self.image = image
+                        self.imageView.contentMode = .scaleAspectFit
+                        self.imageView.image = image
+                        self.delegate?.comicImageCollectionViewCellDidLoadImage(self)
+                    }
+                }
             }
         }
     }
