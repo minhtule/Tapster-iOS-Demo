@@ -126,7 +126,9 @@ class ComicViewController : UIViewController {
         engineClient.sendQuery(query, responseType: RecommendationResponse.self) { response, error in
             guard let response = response, response.comics.count > 0 else { return }
 
-            self.addAndAnimateNewComic(response.comics[0])
+            DispatchQueue.main.async {
+                self.addAndAnimateNewComic(response.comics[0])
+            }
         }
     }
     
