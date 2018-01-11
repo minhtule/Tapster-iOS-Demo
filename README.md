@@ -4,9 +4,8 @@ This demo demonstrates how to use the PredictionIO Swift SDK to integrate an iOS
 
 ### Requirements
 
-- [PredictionIO 9.2](http://docs.prediction.io/install/)
-- Xcode 6.3 and iOS 8.2
-- [CocoaPods 0.36](https://guides.cocoapods.org/using/getting-started.html) (Dependency manager for Swift projects)
+- [PredictionIO 0.12.0+](https://predictionio.apache.org/install/)
+- Xcode 9.0+ and iOS 9.0+
 
 ### Demo
 
@@ -63,7 +62,7 @@ $ pio eventserver
 let eventClient = EventClient(accessKey: "<Your App ID here>")
 ```
 
-Run the simulator. In the home screen, tap `Import Data` and then `Run Import` button. The whole import process will take about 6 minutes. When it finishes, the completed time will be displayed in the Xcode console.
+Run the simulator. In the home screen, tap `Import Data` and then `Run Import` button. The whole import will take a while. Check Xcode's debug console to see the progress.
 
 * Now we can train and deploy our engine. In the engine directory, run
 

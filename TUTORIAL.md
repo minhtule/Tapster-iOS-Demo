@@ -2,9 +2,8 @@
 
 ### Requirements
 
-- [PredictionIO 9.2](http://docs.prediction.io/install/)
-- Xcode 6.3 and iOS 8.2
-- [CocoaPods 0.36](https://guides.cocoapods.org/using/getting-started.html) (Dependency manager for Swift projects)
+- [PredictionIO 0.12.0+](https://predictionio.apache.org/install/)
+- Xcode 9.0+ and iOS 9.0+
 
 ## PredictionIO Setup
 
@@ -28,25 +27,25 @@ Take note of the app name and the access key.
 
 **_Note:_** 
 
-- If you are using an old template that requires app ID as parameter in the `engine.json`, you need take note of the app ID here. 
-- You can always view all your applications' details using
+- You can always view all your application's credentials using
 ```bash
 $ pio app list
 ```
 
 ### Setup a Similar Product engine
 
-**Step 1:** Copy the Similar Product Template into the local directory. This guide uses the template version *v0.3.0*. 
+**Step 1:** Clone the Similar Product Template. This guide uses the template version *v0.12.0*. 
 
 ```bash
-$ pio template get PredictionIO/template-scala-parallel-similarproduct tapster-similar-product 
+$ git clone https://github.com/apache/incubator-predictionio-template-similar-product.git tapster-similar-product
+$ cd tapster-similar-product
 ```
 
 **Step 2:** Add our app name `tapster` to the `appName` field in the `engine.json` file.
 
 **Step 3:** Modify our Engine!
 
-* By the default, the template reads `view` events. So we need to change it to `like` event.
+* By the default, the template accepts `view` events. So we need to change it to `like` event.
 
 In `DataSource.scala`, modify `viewEventsRDD` in the `readTraining` method.
 
@@ -82,7 +81,7 @@ def readTraining(sc: SparkContext): TrainingData = {
 }
 ```
 
-* By default, the Event Server only accepts the comic's categories. We also need to send in the comic's title and image URLs so we can return them in the recommendation response.
+* By default, the Event Server only accepts the comic's categories. We also need to send in the comic's title and image URLs so that we can return them in the recommendation response.
 
 In `DataSource.scala`, modify `itemsRDD` in the `readTraining` method and also the `Item` class.
 
@@ -161,6 +160,42 @@ class ALSAlgorithm(val ap: ALSAlgorithmParams)
 }
 ```
 
+In `CooccurrenceAlgorithm.scala`, modify `itemScores` in the `predict` method.
+
+```scala
+class CooccurrenceAlgorithm(val ap: CooccurrenceAlgorithmParams)
+  extends P2LAlgorithm[PreparedData, CooccurrenceModel, Query, PredictedResult] {
+  ...
+
+  def predict(model: CooccurrenceModel, query: Query): PredictedResult = {
+    ...
+
+    val itemScores = counts
+      .filter { case (i, v) =>
+        isCandidateItem(
+          i = i,
+          items = model.items,
+          categories = query.categories,
+          queryList = queryList,
+          whiteList = whiteList,
+          blackList = blackList
+        )
+      }
+      .sortBy(_._2)(Ordering.Int.reverse)
+      .take(query.num)
+      .map { case (index, count) =>
+        ItemScore(
+          itemID = model.itemIntStringMap(index),  // MODIFIED
+          title = model.items(index).title,  // ADDED
+          imageURLs = model.items(index).imageURLs,  // ADDED
+          score = count
+        )
+      }
+    ...
+  }
+}
+```
+
 **Step 4:** Build the engine. Simply run,
 
 ```Bash
@@ -173,16 +208,6 @@ If you modified the code correctly, you should see the message that your engine 
 **_Note:_** The final code for the engine can be found at [this repository](https://github.com/minhtule/Tapster-iOS-Similar-Product-Engine). You can check the step-by-step changes in its commit history.
 
 ## Setting up the iOS app
-
-To follow this tutorial and integrate PredictionIO SDK to the Tapster app yourself, checkout the first commit.
-
-```bash
-$ cd ..
-# Clone this iOS repo if you haven't done so
-$ git clone https://github.com/minhtule/Tapster-iOS-Demo
-$ cd Tapster-iOS-Demo
-$ git checkout 859112132529979ccfeeffe79429207844f38904
-```
 
 To install dependencies for the iOS project, make sure you have installed [CocoaPods](https://guides.cocoapods.org/using/getting-started.html). Then at the Xcode project root directory, run
 
@@ -214,9 +239,7 @@ The import process consists of 3 steps:
 * Send user data using the `setUser` method.
 * Send likes data using the `recordAction` method.
 
-Now, run the application again. In the home screen, tap on `Import Data` and then `Run Import` button. The whole import will take about 6 minutes so be patient! You will see the completed time displayed i Xcode console when it finishes.
-
-**_Note:_** The import of like events is a bit tricky because there are 190k events. We can't simply send in all of them at once because each request creates a new thread. The app's CPU and memory usage will shoot up and it will hang. So we need to handle the requests manually and send only 4 requests at a time. Hopefully, PredictionIO Event API will support batch requests soon.
+Now, run the application again. In the home screen, tap on `Import Data` and then `Run Import` button. The whole import will take a while. Check Xcode's debug console to see the progress.
 
 ## Train and deploy the engine
 
@@ -239,15 +262,15 @@ In `ComicViewController.swift`, `ComicViewController` is the controller that is 
 * Import the PredictionIO Swift SDK at the top of the `ComicViewController.swift` file.
 
 ```swift
-import PredictionIOSDK
+import PredictionIO
 ```
 
 * Create a `engineClient` as a stored property of `ComicViewController`.
 
 ```swift
 ...
-let engineClient = EngineClient()  // ADDED
-var directionComicDeleted: Direction = .Right
+let engineClient = EngineClient()
+var directionComicDeleted: Direction = .right
 ...
 ```
 
@@ -271,19 +294,17 @@ if likedComicIDs.isEmpty {
     return
 }
 
-let query: [String: NSObject] = [
+let query: [String: Any] = [
     "num": 1,
     "items": likedComicIDs,
     "blackList": displayedComicIDs
 ]
 
-engineClient.sendQuery(query, completionHandler: { (request, response, data, error) in
-    if let result = Mapper<Result>().map(data) {
-        if result.comics.count > 0 {
-            self.addAndAnimateNewComic(result.comics[0])
-        }
-    }
-})
+engineClient.sendQuery(query, responseType: RecommendationResponse.self) { response, error in
+    guard let response = response, response.comics.count > 0 else { return }
+
+    self.addAndAnimateNewComic(response.comics[0])
+}
 ```
 
 That's it! Rerun the app, swipe right on a comic you like and you will notice that similar comics will be displayed.
