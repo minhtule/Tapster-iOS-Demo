@@ -6,6 +6,8 @@ branches:
   only:
     - master
 
+cache: cocoapods
+
 env:
   global:
     - WORKSPACE="Tapster iOS Demo.xcworkspace"
