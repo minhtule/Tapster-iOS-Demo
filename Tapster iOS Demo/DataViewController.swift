@@ -17,7 +17,7 @@ class DataViewController: UIViewController {
     var globalLikeIndex = 0
     var finishingCounter = 0
     
-    @IBAction func importDataButtonAction(sender: UIButton) {
+    @IBAction func importDataButtonAction(_ sender: UIButton) {
         self.readCSVDataAndImport()
     }
     

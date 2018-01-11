@@ -45,7 +45,7 @@ class ComicViewController : UIViewController {
         displayedComicIDs += comics.map { $0.id }
     }
     
-    @IBAction func handleSwipeRightGesture(sender: UISwipeGestureRecognizer) {
+    @IBAction func handleSwipeRightGesture(_ sender: UISwipeGestureRecognizer) {
         if !shouldAcceptGesture() {
             return
         }
@@ -53,7 +53,7 @@ class ComicViewController : UIViewController {
         likeComic()
     }
     
-    @IBAction func handleSwipeLeftGesture(sender: UISwipeGestureRecognizer) {
+    @IBAction func handleSwipeLeftGesture(_ sender: UISwipeGestureRecognizer) {
         if !shouldAcceptGesture() {
             return
         }
@@ -61,7 +61,7 @@ class ComicViewController : UIViewController {
         dislikeComic()
     }
     
-    @IBAction func likeButtonAction(sender: UIButton) {
+    @IBAction func likeButtonAction(_ sender: UIButton) {
         if !shouldAcceptGesture() {
             return
         }
@@ -69,7 +69,7 @@ class ComicViewController : UIViewController {
         likeComic()
     }
     
-    @IBAction func dislikeButtonAction(sender: UIButton) {
+    @IBAction func dislikeButtonAction(_ sender: UIButton) {
         if !shouldAcceptGesture() {
             return
         }
