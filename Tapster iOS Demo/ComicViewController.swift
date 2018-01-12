@@ -122,8 +122,8 @@ class ComicViewController: UIViewController {
             "blackList": displayedComicIDs
         ]
 
-        engineClient.sendQuery(query, responseType: RecommendationResponse.self) { response, _ in
-            guard let response = response, !response.comics.isEmpty else { return }
+        engineClient.sendQuery(query, responseType: RecommendationResponse.self) { result in
+            guard let response = result.value, !response.comics.isEmpty else { return }
 
             DispatchQueue.main.async {
                 self.addAndAnimateNewComic(response.comics[0])
