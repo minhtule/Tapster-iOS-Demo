@@ -7,116 +7,89 @@
 //
 
 import UIKit
-import PredictionIOSDK
+import PredictionIO
 
 class DataViewController: UIViewController {
-    let userIDColumn = 0
-    let episodeIDColumn = 1
     let eventClient = EventClient(accessKey: "")
-    let numberOfConcurrentRequests = 4 // Same as Apple's HTTPMaximumConnectionsPerHost default value for iOS
-    var globalLikeIndex = 0
-    var finishingCounter = 0
-    
-    @IBAction func importDataButtonAction(sender: UIButton) {
+
+    @IBAction func importDataButtonAction(_ sender: UIButton) {
         self.readCSVDataAndImport()
     }
-    
+
     private func readCSVDataAndImport() {
-        
+
         // MARK: - episodes data
         let episodeData = CSVData(fileName: "episode_list")
-        
-        println("Found \(episodeData.rows.count) unique episode")
-        println("Sending episodes data...")
-        
-        for row in episodeData.rows {
-            eventClient.setItem(row[0],
-                properties: [
-                    "title": row[1],
-                    "categories": convertCategories(row[2]),
-                    "imageURLs": convertImageURLs(row[4]),
-                ],
-                completionHandler: { (_, _, data, error) -> Void in
 
-                    // Only report if an error occurs
-                    if error != nil {
-                        println(data)
-                        println("Sending episode: \(row[0]) has error \(error)")
-                    }
-                }
-            )
+        print("Found \(episodeData.rows.count) unique episode")
+        print("Sending episodes data...")
+
+        processRows(episodeData.rows, messagePrefix: "Sending episode") { row in
+            let properties: [String: Any] = [
+                "title": row[1],
+                "categories": convertCategories(row[2]),
+                "imageURLs": convertImageURLs(row[4])
+            ]
+            return Event(event: Event.setEvent, entityType: Event.itemEntityType, entityID: row[0], properties: properties)
         }
-        
-        println("Done with episodes!")
-        
+
         // MARK: - users data
-        
-        let readStartTime = NSDate()
-        let likesData = CSVData(fileName: "user_list")
-        let userIDs = likesData.uniqueEntries(userIDColumn)
-        
-        println("Found \(userIDs.count) unique user IDs")
-        println("Sending users data...")
-        
-        for userID in userIDs {
-            eventClient.setUser(userID,
-                properties: [:],
-                completionHandler: { (_, _, data, error) -> Void in
-                    // Only report if an error occurs
-                    if error != nil {
-                        println(data)
-                        println("Sending user: \(userID) has error \(error)")
-                    }
-                }
-            )
-        }
-        
-        println("Done with users!")
-        
-        // MARK: - likes data
-        
-        println("Sending likes data...")
-        
-        let startTime = NSDate()
-        println("Start time = \(startTime)")
 
-        globalLikeIndex = numberOfConcurrentRequests
-        for i in 0..<numberOfConcurrentRequests {
-            sendLikeData(likesData, rowIndex: i)
+        let likesData = CSVData(fileName: "user_list")
+        let userIDs = likesData.uniqueEntries(column: 0)
+
+        print("Found \(userIDs.count) unique user IDs")
+        print("Sending users data...")
+
+        let userIDRows = userIDs.map { [$0] }
+        processRows(userIDRows, messagePrefix: "Sending user") { row in
+            return Event(event: Event.setEvent, entityType: Event.userEntityType, entityID: row[0])
         }
-        
+
+        // MARK: - likes data
+
+        print("Sending likes data...")
+
+        processRows(likesData.rows, messagePrefix: "Sending likes") { row in
+            return Event(event: "like", entityType: Event.userEntityType, entityID: row[0], targetEntity: (Event.itemEntityType, row[1]))
+        }
     }
-    
-    private func convertCategories(categories: String) -> [String] {
-        return categories.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
+
+    private func convertCategories(_ categories: String) -> [String] {
+        return categories.components(separatedBy: CharacterSet(charactersIn: ","))
     }
-    
-    private func convertImageURLs(imageURLs: String) -> [String] {
-        return imageURLs.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ";"))
+
+    private func convertImageURLs(_ imageURLs: String) -> [String] {
+        return imageURLs.components(separatedBy: CharacterSet(charactersIn: ";"))
     }
-    
-    private func sendLikeData(likesData: CSVData, rowIndex: Int) {
-        let row = likesData.rows[rowIndex]
-        eventClient.recordAction("like",
-            byUserID: row[0],
-            itemID: row[1],
-            properties: [:],
-            completionHandler: { (_, _, _, error) in
-                if error != nil {
-                    println("Sending like for user \(row[0]) and item \(row[1]) has error \(error)")
+
+    private func processRows(_ rows: [[String]], messagePrefix: String, transformRow: ([String]) -> Event) {
+        let batchSize = 50
+        let total = rows.count
+        var currentOffset = 0
+        var nextOffset = 0
+
+        while currentOffset < total {
+            nextOffset = min(currentOffset + batchSize, total)
+
+            let events = rows[currentOffset..<nextOffset].map(transformRow)
+            eventClient.createBatchEvents(events) { [numProcessed = nextOffset] statuses, error in
+                if let error = error {
+                    print("Cannot create event due to \(error)")
                 }
-                
-                if self.globalLikeIndex < likesData.rows.count {
-                    self.sendLikeData(likesData, rowIndex: self.globalLikeIndex)
-                    ++self.globalLikeIndex
-                } else if self.globalLikeIndex == likesData.rows.count {
-                    ++self.finishingCounter
-                    if self.finishingCounter == self.numberOfConcurrentRequests {
-                        let endTime = NSDate()
-                        println("End time = \(endTime)")
+
+                if let statuses = statuses {
+                    for case let .failed(message) in statuses {
+                        print("Cannot create event due to error \(message)")
                     }
+                }
+
+                if numProcessed % 500 == 0 || numProcessed == total {
+                    print("\(messagePrefix) - Sent \(numProcessed)/\(total) events.")
                 }
             }
-        )
+
+            currentOffset = nextOffset
+        }
     }
 }

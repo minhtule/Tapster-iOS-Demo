@@ -1,32 +1,27 @@
 PODS:
-  - Alamofire (1.3.0)
-  - ObjectMapper (0.6)
-  - PredictionIOSDK (0.2.0):
-    - Alamofire (~> 1.2)
+  - Alamofire (4.6.0)
+  - AlamofireImage (3.3.0):
+    - Alamofire (~> 4.5)
+  - PredictionIO (1.0.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 1.2)
-  - ObjectMapper (from `https://github.com/Hearst-DD/ObjectMapper.git`, branch `swift-1.2`)
-  - PredictionIOSDK (from `https://github.com/minhtule/PredictionIO-Swift-SDK.git`)
+  - AlamofireImage (~> 3.3)
+  - PredictionIO (from `https://github.com/minhtule/PredictionIO-Swift-SDK.git`)
 
 EXTERNAL SOURCES:
-  ObjectMapper:
-    :branch: swift-1.2
-    :git: https://github.com/Hearst-DD/ObjectMapper.git
-  PredictionIOSDK:
+  PredictionIO:
     :git: https://github.com/minhtule/PredictionIO-Swift-SDK.git
 
 CHECKOUT OPTIONS:
-  ObjectMapper:
-    :commit: a455e9da8a50ada7b65fb4c637d877f038f6996a
-    :git: https://github.com/Hearst-DD/ObjectMapper.git
-  PredictionIOSDK:
-    :commit: 5f58ae0ce6141f276bbd1a3fbeac1cc1ba8d49d0
+  PredictionIO:
+    :commit: 0e6c9d2980149de8930181125aecc13e892f9fb6
     :git: https://github.com/minhtule/PredictionIO-Swift-SDK.git
 
 SPEC CHECKSUMS:
-  Alamofire: 220403a8d5840e0b4c946a6fbaf209dbca124282
-  ObjectMapper: 29c30424027e465a333ab24257be862e1cb7fd62
-  PredictionIOSDK: a9ebfa36cd5eec7929d17d6066998442316a48a1
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  AlamofireImage: 2e784dc5d00f04903a52c1d169181469c805c3df
+  PredictionIO: 1414dacd5c0a9fa6889dc02765726d0c25896493
 
-COCOAPODS: 0.38.2
+PODFILE CHECKSUM: 49fe492a2f74b8016504e9bd89206d1eb5f62fd0
+
+COCOAPODS: 1.3.1

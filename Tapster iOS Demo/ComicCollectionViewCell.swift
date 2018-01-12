@@ -8,30 +8,33 @@
 
 import UIKit
 import Alamofire
+import AlamofireImage
 
-let ComicCellReuseIdentifier = "ComicCellReuseIdentifier"
-let ComicImageCellReuseIdentifier = "ComicImageCellReuseIdentifier"
+let comicCellReuseIdentifier = "ComicCellReuseIdentifier"
+let comicImageCellReuseIdentifier = "ComicImageCellReuseIdentifier"
 
 class ComicCollectionViewCell: UICollectionViewCell {
-    
+
     @IBOutlet weak var imagesCollectionView: UICollectionView!
     @IBOutlet weak var overlayView: UIView!
-    
-    let imageCache = NSCache()
-    
+
+    let imageCache = NSCache<NSString, AnyObject>()
+
     override func awakeFromNib() {
+        super.awakeFromNib()
+
         layer.shadowOpacity = 0.5
         layer.shadowRadius = 10
         layer.shadowOffset = CGSize(width: 0, height: 20)
         layer.masksToBounds = false
     }
-    
+
     var comic: Comic! {
         didSet {
             imagesCollectionView.reloadData()
         }
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
 
@@ -43,70 +46,68 @@ class ComicCollectionViewCell: UICollectionViewCell {
 }
 
 extension ComicCollectionViewCell: UICollectionViewDataSource {
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comic.imageURLs.count
     }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ComicImageCellReuseIdentifier, forIndexPath: indexPath) as! ComicImageCollectionViewCell
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: comicImageCellReuseIdentifier, for: indexPath) as! ComicImageCollectionViewCell
         let imageURL = comic.imageURLs[indexPath.item]
         cell.position = indexPath.item
         cell.delegate = self
-        cell.image = imageCache.objectForKey(imageURL) as? UIImage
+        cell.image = imageCache.object(forKey: imageURL as NSString) as? UIImage
         cell.imageURL = imageURL
         return cell
     }
 }
 
 extension ComicCollectionViewCell: UICollectionViewDelegateFlowLayout {
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // If the image is already downloaded, use the image aspect ratio to calculate the height
         let imageURL = comic.imageURLs[indexPath.item]
         let width = collectionView.bounds.size.width
-        
-        if let image = imageCache.objectForKey(imageURL) as? UIImage {
+
+        if let image = imageCache.object(forKey: imageURL as NSString) as? UIImage {
             return CGSize(width: width, height: width / image.aspectRatio)
         }
-        
+
         // Otherwise, use the width as height
         return CGSize(width: width, height: width)
     }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         let overlayViewHeight = overlayView.frame.height
 
         // Give a padding empty space so that the last comic image is displayed above the overlay.
-        return UIEdgeInsetsMake(0, 0, overlayViewHeight, 0)
+        return UIEdgeInsets(top: 0, left: 0, bottom: overlayViewHeight, right: 0)
     }
 }
 
-extension ComicCollectionViewCell : ComicImageCollectionViewCellDelegate {
-    func comicImageCollectionViewCellDidLoadImage(cell: ComicImageCollectionViewCell) {
-        if imageCache.objectForKey(cell.imageURL) == nil {
-            imageCache.setObject(cell.image, forKey: cell.imageURL)
+extension ComicCollectionViewCell: ComicImageCollectionViewCellDelegate {
+    func comicImageCollectionViewCellDidLoadImage(_ cell: ComicImageCollectionViewCell) {
+        if imageCache.object(forKey: cell.imageURL as NSString) == nil {
+            imageCache.setObject(cell.image, forKey: cell.imageURL as NSString)
         }
-        
+
         // Refresh the layout
         imagesCollectionView.collectionViewLayout.invalidateLayout()
     }
 }
 
-
 // MARK: - ComicImageCollectionViewFlowLayout
 
 class ComicImageCollectionViewFlowLayout: UICollectionViewFlowLayout {
-    override func invalidationContextForBoundsChange(newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
-        let context = super.invalidationContextForBoundsChange(newBounds) as! UICollectionViewFlowLayoutInvalidationContext
+    override func invalidationContext(forBoundsChange newBounds: CGRect) -> UICollectionViewLayoutInvalidationContext {
+        let context = super.invalidationContext(forBoundsChange: newBounds) as! UICollectionViewFlowLayoutInvalidationContext
         context.invalidateFlowLayoutDelegateMetrics = true
         return context
     }
 }
 
-
 // MARK: - ComicImageCollectionViewCell
 
 protocol ComicImageCollectionViewCellDelegate: class {
-    func comicImageCollectionViewCellDidLoadImage(cell: ComicImageCollectionViewCell)
+    func comicImageCollectionViewCellDidLoadImage(_ cell: ComicImageCollectionViewCell)
 }
 
 class ComicImageCollectionViewCell: UICollectionViewCell {
@@ -117,33 +118,32 @@ class ComicImageCollectionViewCell: UICollectionViewCell {
     weak var delegate: ComicImageCollectionViewCellDelegate?
     var request: Request!
 
-    
     var imageURL: String! {
-        didSet {            
-            if image != nil {
-                imageView.contentMode = .ScaleAspectFit
+        didSet {
+            if let image = image {
+                imageView.contentMode = .scaleAspectFit
                 imageView.image = image
             } else {
-                request = Alamofire.request(.GET, imageURL).responseImage { (request, _, image, error) in
-                    if error == nil && image != nil && request.URLString == self.imageURL {
+                request = Alamofire.request(imageURL).responseImage { response in
+                    if let image = response.result.value {
                         self.image = image
-                        self.imageView.contentMode = .ScaleAspectFit
-                        self.imageView.image = image!
+                        self.imageView.contentMode = .scaleAspectFit
+                        self.imageView.image = image
                         self.delegate?.comicImageCollectionViewCellDidLoadImage(self)
                     }
                 }
             }
         }
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         request?.cancel()
         position = nil
         image = nil
-        imageView.contentMode = .Center
-        imageView.image = UIImage(named: "refresh")
+        imageView.contentMode = .center
+        imageView.image = #imageLiteral(resourceName: "refresh")
         delegate = nil
     }
 }

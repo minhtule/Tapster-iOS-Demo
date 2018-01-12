@@ -1,7 +1,8 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0'
+platform :ios, '10.0'
 use_frameworks!
 
-pod 'Alamofire', '~> 1.2'
-pod 'ObjectMapper', :git => 'https://github.com/Hearst-DD/ObjectMapper.git', :branch => 'swift-1.2'
-pod 'PredictionIOSDK', :git => 'https://github.com/minhtule/PredictionIO-Swift-SDK.git'
+target 'Tapster iOS Demo' do
+    pod 'AlamofireImage', '~> 3.3'
+    pod 'PredictionIO', :git => 'https://github.com/minhtule/PredictionIO-Swift-SDK.git'
+end
