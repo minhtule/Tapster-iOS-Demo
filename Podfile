@@ -4,5 +4,5 @@ use_frameworks!
 
 target 'Tapster iOS Demo' do
     pod 'AlamofireImage', '~> 3.3'
-    pod 'PredictionIO', :git => 'https://github.com/minhtule/PredictionIO-Swift-SDK.git'
+    pod 'PredictionIO', '~> 2.0'
 end
