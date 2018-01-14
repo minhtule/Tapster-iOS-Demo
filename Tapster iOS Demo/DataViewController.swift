@@ -73,15 +73,14 @@ class DataViewController: UIViewController {
             nextOffset = min(currentOffset + batchSize, total)
 
             let events = rows[currentOffset..<nextOffset].map(transformRow)
-            eventClient.createBatchEvents(events) { [numProcessed = nextOffset] statuses, error in
-                if let error = error {
-                    print("Cannot create event due to \(error)")
-                }
-
-                if let statuses = statuses {
-                    for case let .failed(message) in statuses {
-                        print("Cannot create event due to error \(message)")
+            eventClient.createBatchEvents(events) { [numProcessed = nextOffset] result in
+                switch result {
+                case let .success(response):
+                    for case let .failure(error) in response.statuses {
+                        print("Cannot create event due to error \(error)")
                     }
+                case let .failure(error):
+                    print("Cannot create event due to \(error)")
                 }
 
                 if numProcessed % 500 == 0 || numProcessed == total {

@@ -274,36 +274,22 @@ var directionComicDeleted: Direction = .right
 ...
 ```
 
-* Delete the following code that randomly selects a comic in the `updateComics` method.
+
+* Then query the engine for recommended comics in the `updateComics` method.
 
 ```swift
-// Add a random new comic
-let comic = randomizeComics(numberOfComics: 1)[0]
-addAndAnimateNewComic(comic)
-```
-
-* Then replace by the following code at the same place at the end of the `updateComics` method.
-
-```swift
-// We can't query PredictionIO with no likes,
-// so we just add a new random comic
-if likedComicIDs.isEmpty {
-    let comic = randomizeComics(numberOfComics: 1)[0]
-    addAndAnimateNewComic(comic)
-    
-    return
-}
-
 let query: [String: Any] = [
     "num": 1,
     "items": likedComicIDs,
     "blackList": displayedComicIDs
 ]
 
-engineClient.sendQuery(query, responseType: RecommendationResponse.self) { response, error in
-    guard let response = response, response.comics.count > 0 else { return }
+engineClient.sendQuery(query, responseType: RecommendationResponse.self) { result in
+    guard let response = result.value, !response.comics.isEmpty else { return }
 
-    self.addAndAnimateNewComic(response.comics[0])
+    DispatchQueue.main.async {
+        self.addAndAnimateNewComic(response.comics[0])
+    }
 }
 ```
 

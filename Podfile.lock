@@ -2,7 +2,7 @@ PODS:
   - Alamofire (4.6.0)
   - AlamofireImage (3.3.0):
     - Alamofire (~> 4.5)
-  - PredictionIO (1.0.0)
+  - PredictionIO (2.0.0)
 
 DEPENDENCIES:
   - AlamofireImage (~> 3.3)
@@ -14,13 +14,13 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   PredictionIO:
-    :commit: 0e6c9d2980149de8930181125aecc13e892f9fb6
+    :commit: 382d860564dac922bd3cf77feae20e5e14f2d62e
     :git: https://github.com/minhtule/PredictionIO-Swift-SDK.git
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
   AlamofireImage: 2e784dc5d00f04903a52c1d169181469c805c3df
-  PredictionIO: 1414dacd5c0a9fa6889dc02765726d0c25896493
+  PredictionIO: 80ed2d8ae9d25e416b60d1090f78065689e7447c
 
 PODFILE CHECKSUM: 49fe492a2f74b8016504e9bd89206d1eb5f62fd0
 
