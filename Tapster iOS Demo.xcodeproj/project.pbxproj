@@ -152,7 +152,6 @@
 				41C59BA71ABFF513001A1B97 /* Frameworks */,
 				41C59BA81ABFF513001A1B97 /* Resources */,
 				9330798762D24CF189EF94D1 /* [CP] Embed Pods Frameworks */,
-				02971252C80556B38F0A7F53 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -211,28 +210,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		02971252C80556B38F0A7F53 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tapster iOS Demo/Pods-Tapster iOS Demo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9330798762D24CF189EF94D1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Tapster iOS Demo/Pods-Tapster iOS Demo-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Tapster iOS Demo/Pods-Tapster iOS Demo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
 				"${BUILT_PRODUCTS_DIR}/PredictionIO/PredictionIO.framework",
@@ -245,7 +229,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tapster iOS Demo/Pods-Tapster iOS Demo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tapster iOS Demo/Pods-Tapster iOS Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FC684E4535BDD9CDF30A048D /* [CP] Check Pods Manifest.lock */ = {
