@@ -6,9 +6,7 @@ branches:
   only:
     - master
 
-cache:
-  - bundler
-  - cocoapods
+cache: cocoapods
 
 env:
   global:
