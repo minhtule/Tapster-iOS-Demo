@@ -7,8 +7,8 @@ branches:
     - master
 
 cache:
-  bundler: true
-  cocoapods: true
+  - bundler
+  - cocoapods
 
 env:
   global:
