@@ -123,7 +123,7 @@ class ComicViewController: UIViewController {
         ]
 
         engineClient.sendQuery(query, responseType: RecommendationResponse.self) { result in
-            guard let response = result.value, !response.comics.isEmpty else { return }
+            guard case let .success(response) = result, !response.comics.isEmpty else { return }
 
             DispatchQueue.main.async {
                 self.addAndAnimateNewComic(response.comics[0])

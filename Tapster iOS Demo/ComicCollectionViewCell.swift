@@ -124,8 +124,8 @@ class ComicImageCollectionViewCell: UICollectionViewCell {
                 imageView.contentMode = .scaleAspectFit
                 imageView.image = image
             } else {
-                request = Alamofire.request(imageURL).responseImage { response in
-                    if let image = response.result.value {
+                request = AF.request(imageURL).responseImage { response in
+                    if case let .success(image) = response.result {
                         self.image = image
                         self.imageView.contentMode = .scaleAspectFit
                         self.imageView.image = image
