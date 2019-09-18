@@ -22,6 +22,8 @@ env:
 
 install:
   - bundle install
+  # Update the CocoaPods master repo so that latest pod versions can be found.
+  - pod repo update
   - pod install
 
 script:
