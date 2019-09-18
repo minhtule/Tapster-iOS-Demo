@@ -1,5 +1,5 @@
-language: objective-c
-osx_image: xcode9.2
+os: osx
+osx_image: xcode11
 git:
   depth: 1
 branches:
@@ -13,16 +13,13 @@ env:
     - WORKSPACE="Tapster iOS Demo.xcworkspace"
     - SCHEME="Tapster iOS Demo"
   matrix:
-    - DESTINATION="OS=11.2,name=iPhone X"         LINTING="YES"
+    - DESTINATION="OS=13.0,name=iPhone XS Max"    LINTING="YES"
+    - DESTINATION="OS=12.2,name=iPhone XS"        LINTING="NO"
+    - DESTINATION="OS=11.4,name=iPhone X"         LINTING="NO"
     - DESTINATION="OS=10.3.1,name=iPhone 7 Plus"  LINTING="NO"
-    
-# Need to update the CocoaPods master repo so that PredictionIO's latest
-# version can be found.
-before_install:
-  - pod repo update
 
 script:
-  - set -o pipefail
+  - set -eo pipefail
 
   # Linting with SwiftLint
   - if [ $LINTING == "YES" ]; then
