@@ -23,7 +23,8 @@ env:
 
 install:
   - bundle install --path vendor/bundle
-  # Update the CocoaPods master repo so that latest pod versions can be found.
+  # Update the CocoaPods master repo so that latest Pod beta versions can be found.
+  # TODO: remove this command when these dependencies go out of beta.
   - pod repo update
   - pod install
 
