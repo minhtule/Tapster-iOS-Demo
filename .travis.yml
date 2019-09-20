@@ -1,28 +1,35 @@
-language: objective-c
-osx_image: xcode9.2
+os: osx
+osx_image: xcode11
 git:
   depth: 1
 branches:
   only:
     - master
 
-cache: cocoapods
+cache:
+  directories:
+    - vendor/bundle
+    - Pods
 
 env:
   global:
     - WORKSPACE="Tapster iOS Demo.xcworkspace"
     - SCHEME="Tapster iOS Demo"
   matrix:
-    - DESTINATION="OS=11.2,name=iPhone X"         LINTING="YES"
+    - DESTINATION="OS=13.0,name=iPhone XS Max"    LINTING="YES"
+    - DESTINATION="OS=12.2,name=iPhone XS"        LINTING="NO"
+    - DESTINATION="OS=11.4,name=iPhone X"         LINTING="NO"
     - DESTINATION="OS=10.3.1,name=iPhone 7 Plus"  LINTING="NO"
-    
-# Need to update the CocoaPods master repo so that PredictionIO's latest
-# version can be found.
-before_install:
+
+install:
+  - bundle install --path vendor/bundle
+  # Update the CocoaPods master repo so that latest Pod beta versions can be found.
+  # TODO: remove this command when these dependencies go out of beta.
   - pod repo update
+  - pod install
 
 script:
-  - set -o pipefail
+  - set -eo pipefail
 
   # Linting with SwiftLint
   - if [ $LINTING == "YES" ]; then

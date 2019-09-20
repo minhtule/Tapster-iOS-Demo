@@ -7,8 +7,9 @@ This demo demonstrates how to use the [PredictionIO Swift SDK](https://github.co
 
 ### Requirements
 
-- [PredictionIO 0.12.0+](https://predictionio.apache.org/install/)
-- Xcode 9.0+ and iOS 9.0+
+- [PredictionIO 0.14.0+](https://predictionio.apache.org/install/)
+- Xcode 11.0+ and iOS 10.0+
+- Swift 5+
 
 ### Demo
 
@@ -28,7 +29,7 @@ $ git clone https://github.com/minhtule/Tapster-iOS-Demo-Similar-Product-Engine.
 
 ```bash
 # Need to start HBase and Elasticsearch first
-$ pio-start-all  
+$ pio-start-all
 $ pio app new tapster
 $ cd tapster-similar-product
 $ pio build
@@ -37,6 +38,11 @@ $ pio build
 **Note:** If your PredictionIO app is not `tapster`, you need to update the `appName` field in the `engine.json` file with the new app name.
 
 ### Set up the iOS app
+
+* Install Gemfile
+```bash
+bundle install
+```
 
 * Install CocoaPods dependencies
 
@@ -81,6 +87,6 @@ Now the recommendation engine is ready and you can start reading comics! In the 
 For step-by-step instructions, check out the detailed [tutorial](https://github.com/minhtule/Tapster-iOS-Demo/blob/master/TUTORIAL.md).
 
 ## License
-Tapster iOS Demo is released under the MIT license. See 
+Tapster iOS Demo is released under the MIT license. See
 [LICENSE](https://github.com/minhtule/Tapster-iOS-Demo/blob/master/LICENSE) for
 details

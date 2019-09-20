@@ -3,6 +3,6 @@ platform :ios, '10.0'
 use_frameworks!
 
 target 'Tapster iOS Demo' do
-    pod 'AlamofireImage', '~> 3.3'
-    pod 'PredictionIO', '~> 2.0'
+    pod 'AlamofireImage', '~> 4.0.0-beta.5'
+    pod 'PredictionIO', '~> 3.0'
 end

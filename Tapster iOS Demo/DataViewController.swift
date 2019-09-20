@@ -43,7 +43,7 @@ class DataViewController: UIViewController {
 
         let userIDRows = userIDs.map { [$0] }
         processRows(userIDRows, messagePrefix: "Sending user") { row in
-            return Event(event: Event.setEvent, entityType: Event.userEntityType, entityID: row[0])
+            Event(event: Event.setEvent, entityType: Event.userEntityType, entityID: row[0])
         }
 
         // MARK: - likes data
@@ -51,7 +51,7 @@ class DataViewController: UIViewController {
         print("Sending likes data...")
 
         processRows(likesData.rows, messagePrefix: "Sending likes") { row in
-            return Event(event: "like", entityType: Event.userEntityType, entityID: row[0], targetEntity: (Event.itemEntityType, row[1]))
+            Event(event: "like", entityType: Event.userEntityType, entityID: row[0], targetEntity: (Event.itemEntityType, row[1]))
         }
     }
 
